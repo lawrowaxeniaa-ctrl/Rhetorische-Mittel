@@ -1,0 +1,2 @@
+# Rhetorische-Mittel
+Gedichtanalyse
