@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stilmittel – große Wiederholung</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bitter:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F5F8; --card:#FFFFFF; --ink:#14213D; --muted:#5A6580; --line:#D5DCE7;
+  --mark:#FFD84D; --ok:#12805F; --okbg:#DDF3EA; --bad:#B8323D; --badbg:#FBE3E5; --accent:#2B4C9B; --accentbg:#E4EBFA;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1424; --card:#18203A; --ink:#EDF1FA; --muted:#A3AEC9; --line:#2D3858;
+  --mark:#E3B91F; --ok:#4FD1A5; --okbg:#10382E; --bad:#FF8590; --badbg:#42202A; --accent:#8FAEFF; --accentbg:#1F2B52;}}
+:root[data-theme="dark"]{
+  --bg:#0E1424; --card:#18203A; --ink:#EDF1FA; --muted:#A3AEC9; --line:#2D3858;
+  --mark:#E3B91F; --ok:#4FD1A5; --okbg:#10382E; --bad:#FF8590; --badbg:#42202A; --accent:#8FAEFF; --accentbg:#1F2B52;}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,Segoe UI,sans-serif;font-size:17px;line-height:1.55}
+h1,h2,h3{font-family:Bitter,Georgia,serif;line-height:1.2;margin:0}
+header.top{max-width:860px;margin:0 auto;padding:22px 18px 8px}
+.brand{font-weight:700;letter-spacing:.04em;color:var(--accent);font-size:15px}
+header.top h1{font-size:clamp(28px,5vw,40px);font-weight:800;margin-top:6px}
+header.top p{color:var(--muted);margin:8px 0 0;max-width:62ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--ink);padding:10px 0}
+nav .in{max-width:860px;margin:0 auto;padding:0 18px;display:flex;gap:8px;flex-wrap:wrap}
+nav button{flex:1 1 170px;text-align:left;border:2px solid var(--ink);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:6px;font:inherit;cursor:pointer}
+nav button small{display:block;color:var(--muted);font-size:13px}
+nav button[aria-selected="true"]{background:var(--mark);color:#14213D;box-shadow:3px 3px 0 var(--ink)}
+nav button[aria-selected="true"] small{color:#3b3b2a}
+@media(max-width:600px){nav button{flex:1 1 40%;padding:6px 10px}nav button small{display:none}.score{position:static}}
+main{max-width:860px;margin:0 auto;padding:20px 18px 40px}
+section.seq{display:none}section.seq.on{display:block}
+.lead{color:var(--muted);max-width:62ch;margin:6px 0 20px}
+.score{position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:4;display:inline-block;background:var(--ink);color:var(--bg);padding:4px 12px;border-radius:99px;font-size:15px;margin-bottom:14px}
+.q{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:16px 18px;margin:0 0 16px}
+.q .n{font-size:14px;color:var(--muted);margin-bottom:6px}
+.q .src{font-size:14px;color:var(--accent);font-weight:700;margin-bottom:6px}
+.q blockquote,.verse{margin:0 0 12px;padding:0 0 0 14px;border-left:4px solid var(--mark);font-family:Bitter,Georgia,serif;font-weight:600;font-size:19px;white-space:pre-line}
+.sq{font-weight:700;margin:10px 0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts button{font:inherit;padding:7px 12px;border-radius:6px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;text-align:left}
+.opts button:hover:not(:disabled){background:var(--accentbg)}
+.opts button:focus-visible,nav button:focus-visible,.tool:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opts button.right{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:700}
+.opts button.wrong{background:var(--badbg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opts button:disabled{cursor:default}
+.opts.col{flex-direction:column}
+.opts.syl button{font-family:Bitter,Georgia,serif;font-weight:600;font-size:19px;min-width:52px;text-align:center}
+.step2{display:none;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.step2.show{display:block}
+.fb{display:none;margin-top:12px;padding:12px 14px;border-radius:6px;background:var(--accentbg);font-size:16px}
+.fb.show{display:block}
+.fb .verdict{font-weight:700;margin-bottom:4px}
+.fb .verdict.ok{color:var(--ok)}.fb .verdict.no{color:var(--bad)}
+.fb dl{margin:6px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:3px 12px}
+.fb dt{color:var(--muted)}.fb dd{margin:0}
+@media(max-width:520px){.fb dl{grid-template-columns:1fr}.fb dt{margin-top:6px}}
+.tag{display:inline-block;font-size:13px;padding:1px 8px;border-radius:99px;border:1px solid var(--muted);color:var(--muted);margin-left:6px;vertical-align:1px}
+.tag.orig{border-color:var(--ok);color:var(--ok)}
+.tag.gym{border-color:var(--accent);color:var(--accent);font-weight:700;margin-left:0}
+.box{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:16px 18px;margin:0 0 18px}
+.box h3{font-size:22px;margin-bottom:6px}
+.box.warn{border-color:var(--bad);border-width:2px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;margin:12px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:700px){.grid3,.grid2{grid-template-columns:1fr}}
+.kcard{border:1.5px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--bg)}
+.kcard h4{margin:0 0 4px;font-size:17px}
+.ex{font-style:italic;color:var(--muted)}
+.wk{margin-top:8px;padding:8px 10px;border-radius:6px;background:var(--accentbg);font-size:15.5px}
+.schema{display:inline-block;font-family:ui-monospace,Consolas,monospace;font-size:15px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:3px 10px;margin:4px 0 8px}
+.meter{display:flex;flex-wrap:wrap;gap:3px;margin:8px 0;font-family:Bitter,Georgia,serif;font-weight:600}
+.meter span{display:inline-flex;flex-direction:column;align-items:center;padding:2px 6px 3px;border-radius:4px;font-size:17px;border:1px solid transparent}
+.meter span::before{content:attr(data-m);font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--muted);font-weight:400}
+.meter span.b{background:var(--mark);color:#14213D}
+.meter span.b::before{color:#14213D;font-weight:700}
+.meter span.end{border:1.5px dashed var(--accent)}
+.meter .kad{align-self:flex-end;font-family:"Atkinson Hyperlegible",sans-serif;font-size:14px;color:var(--accent);font-weight:700;margin-left:6px}
+.demo{font-family:Bitter,Georgia,serif;font-weight:600;font-size:18px;margin:8px 0;line-height:1.9}
+.ka{background:var(--mark);color:#14213D;padding:1px 6px;border-radius:4px}
+.arrow{color:var(--accent);font-family:"Atkinson Hyperlegible",sans-serif;font-size:15px;font-weight:700}
+h2.sec{font-size:26px;margin:30px 0 8px}
+table.k{border-collapse:collapse;width:100%;font-size:16px}
+table.k th,table.k td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.k th{color:var(--muted);font-weight:700;font-size:14px}
+.strophe{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;margin:8px 0}
+.strophe .vl{font-family:Bitter,Georgia,serif;font-weight:600;font-size:18px}
+select{font:inherit;padding:5px 8px;border:1.5px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink)}
+select.right{border-color:var(--ok);background:var(--okbg)}select.wrong{border-color:var(--bad);background:var(--badbg)}
+.tool{font:inherit;padding:7px 14px;border-radius:6px;border:2px solid var(--ink);background:var(--mark);color:#14213D;font-weight:700;cursor:pointer;margin-top:10px}
+.tool.ghost{background:transparent;color:var(--ink)}
+.res{margin-top:10px;font-weight:600}
+details.over{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:12px 16px;margin:0 0 18px}
+details.over summary{cursor:pointer;font-weight:700}
+.overgrid{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin-top:10px;font-size:16px}
+.overgrid b{white-space:nowrap}
+.overgrid .grp{grid-column:1/-1;margin-top:10px;color:var(--accent);font-weight:700;font-family:Bitter,Georgia,serif}
+@media(max-width:520px){.overgrid{grid-template-columns:1fr}.overgrid b{margin-top:6px}}
+footer.foot{max-width:860px;margin:0 auto;padding:10px 18px 60px;color:var(--muted);font-size:14px;text-align:center}
+@media (prefers-reduced-motion:no-preference){.fb.show,.step2.show{animation:pop .18s ease-out}@keyframes pop{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}}
+@media print{
+  nav,.tool,.score{display:none!important}
+  section.seq{display:block!important;break-before:page}
+  section.seq:first-of-type{break-before:auto}
+  body{background:#fff;color:#000}
+  footer.foot{position:fixed;bottom:0;left:0;right:0;padding:4px;background:#fff}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">mygerman.pro</div>
+  <h1>Stilmittel: Gedichtform und große Wiederholung</h1>
+  <p>Sequenz 1 ist für Gymnasiasten: Kadenz und Enjambement. Danach wiederholst du alle 27 Stilmittel aus den bisherigen Übungen – erst in zwei Gruppen, dann im großen Mix.</p>
+</header>
+<nav><div class="in" role="tablist">
+  <button role="tab" aria-selected="true" data-t="s1">Sequenz 1<small>Gymnasium: Kadenz &amp; Enjambement</small></button>
+  <button role="tab" aria-selected="false" data-t="s2">Sequenz 2<small>Wiederholung: Bild, Klang, Bedeutung</small></button>
+  <button role="tab" aria-selected="false" data-t="s3">Sequenz 3<small>Wiederholung: Wortwiederholung &amp; Satzbau</small></button>
+  <button role="tab" aria-selected="false" data-t="s4">Sequenz 4<small>Großer Mix: alle 27 Stilmittel</small></button>
+</div></nav>
+<main>
+
+<!-- ================= SEQUENZ 1 ================= -->
+<section class="seq on" id="s1">
+  <span class="tag gym">Gymnasium</span>
+  <h2 style="margin-top:8px">Kadenz und Enjambement</h2>
+  <p class="lead">Zwei Begriffe für die Gedichtanalyse. Beide betreffen das <b>Versende</b>: Die Kadenz zeigt, wie der Vers klingend endet. Das Enjambement zeigt, ob der Satz dort endet oder weiterläuft.</p>
+
+  <div class="box">
+    <h3>Kadenz</h3>
+    <p>Die Kadenz ist die <b>Betonung am Ende eines Verses</b>. Das Wort kommt vom lateinischen <i>cadere</i> „fallen“: Es geht darum, wie der Vers „fällt“, also ausklingt. Entscheidend ist: <b>Wie viele unbetonte Silben folgen nach der letzten betonten Silbe?</b></p>
+    <div class="grid3">
+      <div class="kcard"><h4>männlich (m)</h4><span class="schema">… x <b>X</b> |</span><div>Endet auf einer <b>betonten</b> Silbe. Danach folgt nichts.</div><div class="wk"><b>Wirkung:</b> Der Vers bricht hart ab. Er klingt <b>stark, klar und abschließend</b>. So betonen Dichter Kraft, Entschlossenheit oder eine wichtige Aussage. Viele männliche Kadenzen hintereinander können auch schwer oder eintönig wirken.</div></div>
+      <div class="kcard"><h4>weiblich (w)</h4><span class="schema">… <b>X</b> x |</span><div>Nach der letzten betonten Silbe folgt <b>eine</b> unbetonte.</div><div class="wk"><b>Wirkung:</b> Der Vers schwingt sanft aus. Er klingt <b>weich und fließend</b>, passt zu ruhigen, zärtlichen oder nachdenklichen Stellen. Er kann auch <b>Bewegung, Fortdauer, Unvollständigkeit oder Unsicherheit</b> ausdrücken – der Vers wirkt noch nicht ganz „fertig“.</div></div>
+      <div class="kcard"><h4>reich (r)</h4><span class="schema">… <b>X</b> x x |</span><div>Nach der letzten betonten Silbe folgen <b>zwei</b> unbetonte. Kommt selten vor.</div><div class="wk"><b>Wirkung:</b> Der Vers klingt <b>lang und melodisch aus</b>, das Versende wirkt gar nicht abrupt, sondern <b>schwebend</b>. Das bringt rhythmische Abwechslung und passt zu feierlichen oder nachdenklichen Stellen.</div></div>
+    </div>
+    <p style="margin-bottom:2px"><b>So sieht das aus</b> (X = betont, x = unbetont, gestrichelt = Versende):</p>
+    <div class="meter" data-sy="Am|grau|en|Strand,|am|grau|en|Meer" data-m="xXxXxXxX" data-end="1" data-k="männlich"></div>
+    <div class="ex" style="margin-top:-4px">Theodor Storm – Die Stadt</div>
+    <div class="meter" data-sy="Er|stand|auf|sei|nes|Da|ches|Zin|nen," data-m="xXxXxXxXx" data-end="2" data-k="weiblich"></div>
+    <div class="ex" style="margin-top:-4px">Friedrich Schiller – Der Ring des Polykrates</div>
+    <div class="meter" data-sy="Wir|sind|die|Trei|ben|den." data-m="xXxXxx" data-end="3" data-k="reich"></div>
+    <div class="ex" style="margin-top:-4px">Rainer Maria Rilke – Sonette an Orpheus I, 22</div>
+  </div>
+
+  <div class="box">
+    <h3>So bestimmst du die Kadenz</h3>
+    <ol style="margin:6px 0 0;padding-left:22px">
+      <li>Lies den Vers <b>laut</b> und achte auf den Rhythmus.</li>
+      <li>Trenne die letzten Wörter in <b>Silben</b>.</li>
+      <li>Markiere die <b>letzte betonte</b> Silbe (X).</li>
+      <li>Zähle die unbetonten Silben danach: <b>0 = männlich, 1 = weiblich, 2 = reich</b>.</li>
+    </ol>
+  </div>
+
+  <div class="box warn">
+    <b>Fehleralarm:</b> Bei der weiblichen und der reichen Kadenz ist die <b>letzte</b> Silbe unbetont. Schau deshalb immer auch auf die <b>vorletzte</b> Silbe: Ist sie betont, ist die Kadenz weiblich (Zín-nen). Ist sie auch unbetont, ist sie reich (Tréi-ben-den).<br>
+    <b>Merke:</b> Verse, die sich reimen, haben dieselbe Kadenz.
+  </div>
+
+  <div class="box">
+    <h3>Wirkung im ganzen Gedicht</h3>
+    <table class="k">
+      <tr><th>Gedicht hat vor allem …</th><th>Wirkung</th></tr>
+      <tr><td>männliche Kadenzen</td><td>kraftvoll, direkt, entschlossen, abgeschlossen – oft in dramatischen Texten</td></tr>
+      <tr><td>weibliche Kadenzen</td><td>leicht, fließend, weich – passt zu ruhigen, nachdenklichen oder romantischen Themen</td></tr>
+      <tr><td>wechselnde Kadenzen</td><td>harmonisch und abwechslungsreich, hält die Aufmerksamkeit wach</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec">Übung K1: Finde die letzte betonte Silbe</h2>
+  <p class="lead">Lies den Vers laut. Klicke dann die letzte betonte Silbe an und bestimme die Kadenz.</p>
+  <div class="score" id="scK1" aria-live="polite"></div>
+  <div id="listK1"></div>
+
+  <h2 class="sec">Übung K2: Kadenzen einer ganzen Strophe</h2>
+  <p class="lead">Bestimme für jeden Vers die Kadenz. Tipp: Achte auf die Reime.</p>
+  <div id="listK2"></div>
+
+  <h2 class="sec">Übung K3: Welche Wirkung hat die Kadenz?</h2>
+  <div class="score" id="scK3" aria-live="polite"></div>
+  <div id="listK3"></div>
+
+  <div class="box" style="margin-top:34px">
+    <h3>Enjambement</h3>
+    <p><b>Definition:</b> Das Enjambement (französisch <i>enjamber</i> „überschreiten“), auf Deutsch <b>Zeilensprung</b>, ist ein lyrisches Stilmittel, bei dem ein Satz oder ein Sinnzusammenhang <b>über das Ende eines Verses oder einer Strophe hinaus</b> in die nächste Zeile fortgesetzt wird, <b>ohne durch ein Satzzeichen abgeschlossen zu sein</b>.</p>
+    <p><b>Einfach erklärt:</b> In einem Gedicht hat jeder Vers ein Ende – die Zeile ist zu Ende. Der Satz ist aber noch nicht zu Ende. Er „springt“ über die Zeilengrenze und läuft im nächsten Vers weiter. Man kann sich das vorstellen wie einen Fluss, der über eine kleine Mauer fließt: Die Mauer (das Versende) ist da, aber das Wasser (der Satz) fließt einfach weiter.</p>
+    <div class="wk" style="margin:10px 0"><b>So erkennst du ein Enjambement:</b>
+      <ol style="margin:4px 0 0;padding-left:22px">
+        <li>Schau ans <b>Ende des Verses</b>: Steht dort ein Punkt, ein Ausrufezeichen oder ein Fragezeichen? Dann ist der Satz zu Ende – kein Enjambement.</li>
+        <li>Steht dort <b>kein</b> abschließendes Satzzeichen? Dann frag: <b>Ist der Satz hier vollständig?</b> Fehlt noch das Verb, das Subjekt oder der Rest einer Wortgruppe, läuft der Satz in den nächsten Vers weiter – das ist ein Enjambement.</li>
+        <li>Lies laut: Willst du am Versende <b>keine Pause</b> machen, weil der Gedanke weitergeht, ist es ein Enjambement.</li>
+      </ol>
+    </div>
+    <p>Das Gegenteil ist der <b>Zeilenstil</b>: Satzende und Versende fallen zusammen. Jeder Vers ist ein abgeschlossener Satz oder Satzteil und endet meist mit einem Satzzeichen.</p>
+    <div class="grid2" style="margin-top:10px">
+      <div class="kcard"><h4>Zeilenstil</h4><div class="demo">Wer reitet so spät durch Nacht und Wind?<br>Es ist der Vater mit seinem Kind;</div><div class="ex">Goethe – Erlkönig</div></div>
+      <div class="kcard"><h4>Enjambement</h4><div class="demo">Nur wer mit Toten vom Mohn<br><span class="arrow">↳</span> aß, von dem ihren,<br>wird nicht den leisesten Ton<br><span class="arrow">↳</span> wieder verlieren.</div><div class="ex">Rilke – Nur wer die Leier schon hob</div></div>
+    </div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="wk" style="margin:0"><b>Wirkung des Zeilenstils:</b> Jeder Vers endet mit einer Pause. Das wirkt <b>geordnet, ruhig und klar</b>, oft auch <b>liedhaft</b> wie ein Volkslied. Bei vielen Versen hintereinander kann es <b>starr oder monoton</b> wirken.</div>
+      <div class="wk" style="margin:0"><b>Wirkung des Enjambements:</b> Beim Lesen macht man am Versende <b>keine Pause</b>. Das Gedicht wirkt <b>flüssiger</b>, lebendiger und weniger monoton. Zusammengehörende Gedanken werden über die Verse hinweg <b>verknüpft</b> – besonders deutlich, wenn ein Satz sogar zwei Strophen verbindet.</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <h3>starkes Enjambement</h3>
+      <p>Der Zeilensprung trennt eine <b>syntaktische Einheit</b>, die nur zusammen Sinn ergibt. Der erste Vers bleibt allein unvollständig.</p>
+      <div class="demo">Gastfreundlich tönt dem Wanderer <span class="ka">im</span><br><span class="arrow">↳</span> <span class="ka">Friedlichen Dorfe</span> die Abendglocke.</div>
+      <div class="ex">Hölderlin – Abendphantasie. „im“ und „friedlichen Dorfe“ gehören zusammen.</div>
+      <div class="wk"><b>Wirkung:</b> Der Bruch ist <b>deutlich spürbar</b>. Man wird über das Versende „hinübergezogen“ und wartet gespannt auf den Rest. Das Wort am Anfang des neuen Verses wird dadurch <b>besonders hervorgehoben</b>. Das kann Spannung, Unruhe oder einen inneren Bruch ausdrücken.</div>
+    </div>
+    <div class="box">
+      <h3>schwaches Enjambement</h3>
+      <p>Der Satz geht zwar weiter, aber die Einheiten bleiben zusammen. <b>Jeder Vers ist für sich sinnvoll.</b></p>
+      <div class="demo">Lust und Leid und Liebesklagen<br><span class="arrow">↳</span> Kommen so verworren her</div>
+      <div class="ex">Eichendorff – Die Nachtblume. Subjekt und Prädikat stehen in getrennten Versen, keine Wortgruppe wird zerrissen.</div>
+      <div class="wk"><b>Wirkung:</b> Der Übergang ist <b>sanft</b>, der Lesefluss läuft <b>ruhig und gleichmäßig</b> weiter. Die Verse wirken miteinander verbunden, ohne dass etwas abrupt abbricht – passend zu fließenden Bildern wie hier dem „Wellenschlagen“.</div>
+    </div>
+  </div>
+
+  <h2 class="sec">Übung E1: Zeilenstil oder Enjambement?</h2>
+  <div class="score" id="scE1" aria-live="polite"></div>
+  <div id="listE1"></div>
+
+  <h2 class="sec">Übung E2: starkes oder schwaches Enjambement?</h2>
+  <div class="score" id="scE2" aria-live="polite"></div>
+  <div id="listE2"></div>
+</section>
+
+<!-- ================= SEQUENZ 2 ================= -->
+<section class="seq" id="s2">
+  <h2>Wiederholung 1: Bild, Klang, Bedeutung</h2>
+  <p class="lead">15 Stilmittel, die mit Bildern, Gegensätzen, Klang und Bedeutung arbeiten. Wähle das Stilmittel, danach siehst du Werk, Autor und Wirkung.</p>
+  <div class="box"><b>Zur Einordnung:</b> <span class="tag orig" style="margin-left:0">Originalzitat</span> = geprüfter Wortlaut aus dem Werk. <span class="tag">Beispielsatz</span> = Übungssatz, der zum Werk passt, aber nicht wörtlich darin steht. <span class="tag">Motiv</span> = Bild, das im Werk immer wiederkehrt.</div>
+  <details class="over"><summary>Spickzettel: die 15 Stilmittel dieser Sequenz</summary><div class="overgrid" id="ov2"></div></details>
+  <div class="score" id="sc2" aria-live="polite"></div>
+  <div id="list2"></div>
+  <button class="tool ghost" onclick="build2()">Neu mischen</button>
+</section>
+
+<!-- ================= SEQUENZ 3 ================= -->
+<section class="seq" id="s3">
+  <h2>Wiederholung 2: Wortwiederholung und Satzbau</h2>
+  <p class="lead">12 Stilmittel, die Wörter wiederholen oder den Satz umbauen. Achte genau darauf, <b>wo</b> etwas wiederholt wird.</p>
+  <div class="box warn"><b>Fehleralarm:</b> Anapher = Anfang · Epipher = Ende · Symploke = Anfang <b>und</b> Ende · Anadiplose = Ende → Anfang des nächsten Satzes · Kyklos = Anfang und Ende <b>desselben</b> Satzes · Gemination = direkt hintereinander.<br>Klimax steigert, Akkumulation reiht gleichwertig. Parallelismus: A B / A B, Chiasmus: A B / B A.</div>
+  <details class="over"><summary>Spickzettel: die 12 Stilmittel dieser Sequenz</summary><div class="overgrid" id="ov3"></div></details>
+  <div class="score" id="sc3" aria-live="polite"></div>
+  <div id="list3"></div>
+  <button class="tool ghost" onclick="build3()">Neu mischen</button>
+</section>
+
+<!-- ================= SEQUENZ 4 ================= -->
+<section class="seq" id="s4">
+  <h2>Großer Mix: alle 27 Stilmittel</h2>
+  <p class="lead">Ein Beispiel pro Stilmittel, bunt gemischt, meist aus dem Alltag. Jetzt kann jedes Stilmittel die Antwort sein.</p>
+  <details class="over"><summary>Übersicht: alle 27 Stilmittel</summary><div class="overgrid" id="ov4"></div></details>
+  <div class="score" id="sc4" aria-live="polite"></div>
+  <div id="list4"></div>
+  <button class="tool ghost" onclick="build4()">Neu mischen</button>
+</section>
+</main>
+<footer class="foot">mygerman.pro · Stilmittel: Gedichtform und große Wiederholung</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('section.seq').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));
+  window.scrollTo({top:0});
+});
+const O="Originalzitat",B="Beispielsatz",M="Motiv",U="Übungsbeispiel",R="Redewendung",AL="Alltag";
+
+/* ---------- Definitionen ---------- */
+const G1=["Vergleich","Metapher","Personifikation","Allegorie","Symbol","Hyperbel","Litotes","Euphemismus","Ironie","Oxymoron","Antithese","Neologismus","Alliteration","Onomatopoesie","Rhetorische Frage"];
+const G2=["Anapher","Epipher","Symploke","Anadiplose","Kyklos","Gemination","Klimax","Akkumulation","Parallelismus","Chiasmus","Ellipse","Parenthese"];
+const ALL=G1.concat(G2);
+const DEF={
+ "Vergleich":"Verknüpfung zweier Bereiche mit einem Vergleichswort wie „wie“ oder „als“.",
+ "Metapher":"Bildhafter Ausdruck ohne Vergleichswort: Ein Wort wird in einen neuen Bereich übertragen.",
+ "Personifikation":"Vermenschlichung von Dingen, Tieren, Naturerscheinungen oder abstrakten Begriffen.",
+ "Allegorie":"Ein abstrakter Begriff wird durch ein fortgeführtes Bild oder eine Figur fassbar gemacht.",
+ "Symbol":"Ein konkreter Gegenstand steht für eine tiefere, abstrakte Bedeutung.",
+ "Hyperbel":"Starke Übertreibung, um ein Gefühl oder eine Wirkung zu verstärken.",
+ "Litotes":"Untertreibung durch Verneinung des Gegenteils („nicht schlecht“ = gut).",
+ "Euphemismus":"Beschönigende, mildernde Umschreibung für etwas Unangenehmes.",
+ "Ironie":"Gemeint ist das Gegenteil des Gesagten.",
+ "Oxymoron":"Zwei sich widersprechende Begriffe in einer Wortgruppe.",
+ "Antithese":"Gegenüberstellung gegensätzlicher Gedanken, meist in zwei Satzteilen.",
+ "Neologismus":"Wortneuschöpfung oder vorhandenes Wort mit neuer Bedeutung.",
+ "Alliteration":"Gleicher Anfangslaut bei aufeinanderfolgenden Wörtern.",
+ "Onomatopoesie":"Lautmalerei: Wörter ahmen Geräusche nach (zischen, plätschern, summen).",
+ "Rhetorische Frage":"Scheinfrage, auf die keine Antwort erwartet wird.",
+ "Anapher":"Wiederholung am Anfang aufeinanderfolgender Sätze, Satzteile oder Verse.",
+ "Epipher":"Wiederholung am Ende aufeinanderfolgender Sätze, Satzteile oder Verse.",
+ "Symploke":"Anapher und Epipher zusammen: Anfang und Ende wiederholen sich.",
+ "Anadiplose":"Das letzte Wort eines Satzes ist das erste des nächsten.",
+ "Kyklos":"Dasselbe Wort rahmt einen Satz am Anfang und am Ende ein.",
+ "Gemination":"Unmittelbare Verdopplung eines Wortes oder einer Wortgruppe.",
+ "Klimax":"Stufenweise Steigerung vom Schwächeren zum Stärkeren, meist dreigliedrig.",
+ "Akkumulation":"Gleichwertige Begriffe werden zu einem (genannten oder nicht genannten) Oberbegriff aneinandergereiht.",
+ "Parallelismus":"Gleicher Satzbau in aufeinanderfolgenden Sätzen oder Satzteilen (A B / A B).",
+ "Chiasmus":"Überkreuzstellung von Satzteilen (A B / B A).",
+ "Ellipse":"Unvollständiger Satz, Wörter werden weggelassen.",
+ "Parenthese":"Grammatisch unabhängiger Einschub. Der Satz bleibt ohne ihn vollständig.",
+ "Zeilenstil":"Satzende und Versende fallen zusammen.",
+ "Enjambement":"Lyrisches Stilmittel: Ein Satz oder Sinnzusammenhang wird über das Ende eines Verses oder einer Strophe hinaus in die nächste Zeile fortgesetzt, ohne durch ein Satzzeichen abgeschlossen zu sein.",
+ "starkes Enjambement":"Der Zeilensprung trennt eine Wortgruppe, die nur zusammen Sinn ergibt.",
+ "schwaches Enjambement":"Der Satz läuft weiter, aber jeder Vers bleibt für sich sinnvoll."
+};
+
+/* ---------- Generische Quiz-Engine ---------- */
+const state={};
+function tagHtml(k){return k?`<span class="tag${k===O?' orig':''}">${k}</span>`:''}
+function buildQuiz(id,items,pool,showN,numLabel){
+  const st=state[id]={done:0,ok:0,total:items.length};
+  const list=$('#list'+id);list.innerHTML='';
+  shuffle(items).forEach((it,i)=>{
+    const d=document.createElement('div');d.className='q';
+    const others=shuffle(pool.filter(p=>p!==it.a&&!(it.not||[]).includes(p)));
+    const opts=showN?shuffle([it.a,...others.slice(0,showN-1)]):pool.slice();
+    d.innerHTML=`<div class="n">${numLabel||'Aufgabe'} ${i+1}</div><blockquote>${it.t}</blockquote><div class="opts"></div><div class="fb" aria-live="polite"></div>`;
+    const ob=d.querySelector('.opts'),fb=d.querySelector('.fb');
+    opts.forEach(o=>{
+      const b=document.createElement('button');b.textContent=o;
+      b.onclick=()=>{
+        ob.querySelectorAll('button').forEach(x=>{x.disabled=true;if(x.textContent===it.a)x.classList.add('right')});
+        const ok=o===it.a;if(!ok)b.classList.add('wrong');
+        st.done++;if(ok)st.ok++;
+        fb.innerHTML=`<div class="verdict ${ok?'ok':'no'}">${ok?'Richtig.':'Nicht ganz. Gesucht war: '+it.a+'.'}</div>
+          <div>${DEF[it.a]||''}</div>
+          <dl>${it.w?`<dt>Werk &amp; Autor</dt><dd>${it.w}${tagHtml(it.k)}</dd>`:''}
+          ${it.x?`<dt>Wirkung</dt><dd>${it.x}</dd>`:''}${it.n?`<dt>Hinweis</dt><dd>${it.n}</dd>`:''}</dl>`;
+        fb.classList.add('show');upd(id);
+      };
+      ob.appendChild(b);
+    });
+    list.appendChild(d);
+  });
+  upd(id);
+}
+function upd(id){const s=state[id];$('#sc'+id).textContent=`${s.ok} von ${s.total} richtig · ${s.done} bearbeitet`}
+
+/* ---------- Metrum-Darstellung ---------- */
+document.querySelectorAll('.meter').forEach(m=>{
+  const sy=m.dataset.sy.split('|'),me=m.dataset.m,end=+m.dataset.end;
+  m.innerHTML=sy.map((s,i)=>`<span class="${me[i]==='X'?'b':''}${i>=sy.length-end?' end':''}" data-m="${me[i]}">${s}</span>`).join('')+`<span class="kad">→ ${m.dataset.k}</span>`;
+});
+
+/* ---------- K1: letzte betonte Silbe ---------- */
+const KAD=["männlich","weiblich","reich"];
+const KW={"männlich":"Der Vers endet hart und klar – er wirkt stark, abschließend und entschlossen.","weiblich":"Der Vers schwingt sanft aus – er wirkt weich, fließend und ein wenig offen.","reich":"Der Vers klingt lang und melodisch aus – er wirkt schwebend, gar nicht abrupt."};
+const K1=[
+ {v:"Am grauen Strand, am grauen Meer",w:"Theodor Storm – Die Stadt",syl:["grau","en","Meer"],s:2},
+ {v:"Er stand auf seines Daches Zinnen,",w:"Friedrich Schiller – Der Ring des Polykrates",syl:["Da","ches","Zin","nen"],s:2},
+ {v:"Wir sind die Treibenden.",w:"Rainer Maria Rilke – Sonette an Orpheus I, 22",syl:["die","Trei","ben","den"],s:1},
+ {v:"Saß König Franz,",w:"Friedrich Schiller – Der Handschuh",syl:["Kö","nig","Franz"],s:2},
+ {v:"Das Kampfspiel zu erwarten,",w:"Friedrich Schiller – Der Handschuh",syl:["zu","er","war","ten"],s:2},
+ {v:"Ich weiß nicht, was soll es bedeuten,",w:"Heinrich Heine – Die Loreley",syl:["es","be","deu","ten"],s:2},
+ {v:"Die Erde still geküsst,",w:"Joseph von Eichendorff – Mondnacht",syl:["still","ge","küsst"],s:2},
+ {v:"im immer Bleibenden.",w:"Rainer Maria Rilke – Sonette an Orpheus I, 22",syl:["im","mer","Blei","ben","den"],s:2},
+ {v:"Sich doch einmal wegbegeben!",w:"Johann Wolfgang von Goethe – Der Zauberlehrling",syl:["weg","be","ge","ben"],s:2},
+ {v:"Röslein auf der Heiden.",w:"Johann Wolfgang von Goethe – Heidenröslein",syl:["der","Hei","den"],s:1},
+ {v:"Es ist der Vater mit seinem Kind;",w:"Johann Wolfgang von Goethe – Erlkönig",syl:["sei","nem","Kind"],s:2}
+];
+const k1={};
+function buildK1(){
+  Object.assign(k1,{ok:0,done:0,total:K1.length*2});
+  const list=$('#listK1');list.innerHTML='';
+  shuffle(K1).forEach((it,i)=>{
+    const after=it.syl.length-1-it.s, kad=KAD[after];
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="n">Vers ${i+1}</div><div class="src">${it.w}</div><blockquote>${it.v}</blockquote>
+      <div class="sq">1. Welche ist die letzte betonte Silbe?</div><div class="opts syl o1"></div>
+      <div class="step2"><div class="sq">2. Welche Kadenz hat der Vers?</div><div class="opts o2"></div></div>
+      <div class="fb" aria-live="polite"></div>`;
+    const o1=d.querySelector('.o1'),o2=d.querySelector('.o2'),s2=d.querySelector('.step2'),fb=d.querySelector('.fb');
+    it.syl.forEach((sy,j)=>{
+      const b=document.createElement('button');b.textContent=sy;b.setAttribute('aria-label','Silbe '+sy);
+      b.onclick=()=>{
+        o1.querySelectorAll('button').forEach((x,xi)=>{x.disabled=true;if(xi===it.s)x.classList.add('right')});
+        if(j!==it.s)b.classList.add('wrong');else k1.ok++;
+        k1.done++;updK1();s2.classList.add('show');
+      };
+      o1.appendChild(b);
+    });
+    KAD.forEach(kd=>{
+      const b=document.createElement('button');b.textContent=kd;
+      b.onclick=()=>{
+        o2.querySelectorAll('button').forEach(x=>{x.disabled=true;if(x.textContent===kad)x.classList.add('right')});
+        const ok=kd===kad;if(!ok)b.classList.add('wrong');else k1.ok++;
+        k1.done++;updK1();
+        const rest=after===0?'folgt keine unbetonte Silbe mehr':after===1?'folgt eine unbetonte Silbe':'folgen zwei unbetonte Silben';
+        fb.innerHTML=`<div class="verdict ${ok?'ok':'no'}">${ok?'Richtig.':'Die Kadenz ist '+kad+'.'}</div>
+          Nach der betonten Silbe „${it.syl[it.s]}“ ${rest}${after?' ('+it.syl.slice(it.s+1).join('-')+')':''}. Also: <b>${kad}e Kadenz</b>.<div style="margin-top:6px"><b>Wirkung:</b> ${KW[kad]}</div>`;
+        fb.classList.add('show');
+      };
+      o2.appendChild(b);
+    });
+    list.appendChild(d);
+  });
+  updK1();
+}
+function updK1(){$('#scK1').textContent=`${k1.ok} von ${k1.total} richtig · ${k1.done} Schritte bearbeitet`}
+
+/* ---------- K2: Strophen ---------- */
+const K2=[
+ {w:"Joseph von Eichendorff – Mondnacht (1837)",v:["Es war, als hätt’ der Himmel","Die Erde still geküsst,","Dass sie im Blütenschimmer","Von ihm nun träumen müsst’."],a:["w","m","w","m"],
+  x:"Kreuzreim (abab): Himmel/Blütenschimmer weiblich, geküsst/müsst männlich. Der Wechsel wirkt wie ein ruhiges Ein- und Ausatmen."},
+ {w:"Theodor Storm – Die Stadt (1852)",v:["Am grauen Strand, am grauen Meer","Und seitab liegt die Stadt;","Der Nebel drückt die Dächer schwer,","Und durch die Stille braust das Meer","Eintönig um die Stadt."],a:["m","m","m","m","m"],
+  x:"Nur männliche Kadenzen: Jeder Vers endet hart und schwer – wie das eintönige Rauschen des Meeres um die graue Stadt."},
+ {w:"Friedrich Schiller – Der Handschuh (1797)",v:["Vor seinem Löwengarten,","Das Kampfspiel zu erwarten,","Saß König Franz,"],a:["w","w","m"],
+  x:"Zwei weibliche Kadenzen (Paarreim Löwengarten/erwarten), dann der kurze Vers mit männlicher Kadenz: Der König steht fest im Mittelpunkt."},
+ {w:"Johann Wolfgang von Goethe – Der Zauberlehrling (1797)",v:["Hat der alte Hexenmeister","Sich doch einmal wegbegeben!","Und nun sollen seine Geister","Auch nach meinem Willen leben."],a:["w","w","w","w"],
+  x:"Nur weibliche Kadenzen (Hexenmeister/Geister, wegbegeben/leben): Die Verse schwingen aus und klingen beschwingt, fast übermütig – wie der stolze Lehrling."},
+ {w:"Rainer Maria Rilke – Sonette an Orpheus I, 22 (1922)",v:["Wir sind die Treibenden.","Aber den Schritt der Zeit,","nehmt ihn als Kleinigkeit","im immer Bleibenden."],a:["r","m","m","r"],
+  x:"Umarmender Reim (abba): Treibenden/Bleibenden reich, Zeit/Kleinigkeit männlich. Knobelfrage: „Kleinigkeit“ endet auf „-keit“. Weil es sich auf „Zeit“ reimt, trägt „-keit“ hier die Betonung – also männlich, nicht reich."}
+];
+const KN={m:"männlich",w:"weiblich",r:"reich"};
+function buildK2(){
+  const list=$('#listK2');list.innerHTML='';
+  K2.forEach((st,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="n">Strophe ${i+1}</div><div class="src">${st.w}</div>
+      <div class="strophe">${st.v.map((v,j)=>`<div class="vl">${v}</div><select aria-label="Kadenz Vers ${j+1}"><option value="">–</option><option value="m">männlich</option><option value="w">weiblich</option><option value="r">reich</option></select>`).join('')}</div>
+      <button class="tool">Prüfen</button><div class="res" aria-live="polite"></div>`;
+    d.querySelector('button').onclick=()=>{
+      let ok=0;d.querySelectorAll('select').forEach((s,j)=>{
+        s.classList.remove('right','wrong');
+        if(s.value===st.a[j]){s.classList.add('right');ok++}else if(s.value)s.classList.add('wrong');
+      });
+      const all=ok===st.a.length;
+      d.querySelector('.res').innerHTML=`${ok} von ${st.a.length} richtig.`+(all?`<div style="font-weight:400;margin-top:6px">${st.x}</div>`:` <span style="font-weight:400">Lies die Verse noch einmal laut. Lösung: ${st.a.map(a=>KN[a]).join(' – ')}</span><div style="font-weight:400;margin-top:6px">${st.x}</div>`);
+    };
+    list.appendChild(d);
+  });
+}
+
+/* ---------- K3: Wirkung (eigene Antworten, erste = richtig) ---------- */
+const K3=[
+ {t:"Theodor Storm – Die Stadt: Alle fünf Verse der Strophe enden männlich (Meer, Stadt, schwer, Meer, Stadt).",
+  o:["Die harten, abgeschlossenen Versenden wirken schwer und eintönig – passend zur grauen, bedrückenden Stadt am Meer.","Die Verse klingen weich und verspielt, das Gedicht wirkt heiter.","Die Verse laufen ineinander über, man macht beim Lesen keine Pause."]},
+ {t:"Joseph von Eichendorff – Mondnacht: Weibliche und männliche Kadenzen wechseln sich ab (Himmel – geküsst – Blütenschimmer – müsst).",
+  o:["Offene und geschlossene Versenden wechseln sich ab – wie ein ruhiges Ein- und Ausatmen. Das passt zur traumhaften Stimmung.","Der Wechsel macht das Gedicht hart und kämpferisch.","Der Wechsel zeigt, dass der Dichter sich nicht für eine Kadenz entscheiden konnte."]},
+ {t:"Friedrich Schiller – Der Handschuh: Nach zwei weiblichen Kadenzen (Löwengarten, erwarten) folgt der kurze Vers „Saß König Franz“ mit männlicher Kadenz.",
+  o:["Nach zwei ausschwingenden Versen setzt die männliche Kadenz einen harten Punkt – der König erscheint als feste Mitte der Szene.","Die männliche Kadenz macht den König lächerlich.","Die männliche Kadenz lässt den Vers lang ausklingen."]},
+ {t:"Rainer Maria Rilke – Sonette an Orpheus: Der erste und der letzte Vers enden reich (Treibenden, Bleibenden).",
+  o:["Die Verse klingen mit zwei unbetonten Silben lang aus und wirken schwebend, nicht abrupt – passend zum Nachdenken über die Zeit.","Die Verse enden hart und entschlossen wie ein Befehl.","Die reiche Kadenz zeigt, dass die Verse sich nicht reimen."]}
+];
+const k3={};
+function buildK3(){
+  Object.assign(k3,{ok:0,done:0,total:K3.length});
+  const list=$('#listK3');list.innerHTML='';
+  K3.forEach((it,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="n">Aufgabe ${i+1}</div><p style="margin:0 0 10px">${it.t}</p><div class="opts col"></div>`;
+    const ob=d.querySelector('.opts');
+    shuffle(it.o.map((txt,j)=>({txt,c:j===0}))).forEach(op=>{
+      const b=document.createElement('button');b.textContent=op.txt;b.dataset.c=op.c?'1':'0';
+      b.onclick=()=>{
+        ob.querySelectorAll('button').forEach(x=>{x.disabled=true;if(x.dataset.c==='1')x.classList.add('right')});
+        if(!op.c)b.classList.add('wrong');else k3.ok++;
+        k3.done++;$('#scK3').textContent=`${k3.ok} von ${k3.total} richtig · ${k3.done} bearbeitet`;
+      };
+      ob.appendChild(b);
+    });
+    list.appendChild(d);
+  });
+  $('#scK3').textContent=`0 von ${K3.length} richtig · 0 bearbeitet`;
+}
+
+/* ---------- E1 / E2 ---------- */
+const E1=[
+ {t:"Wer reitet so spät durch Nacht und Wind?\nEs ist der Vater mit seinem Kind;",a:"Zeilenstil",w:"Goethe – Erlkönig",k:O,x:"Jeder Vers ist eine abgeschlossene Einheit (Frage, Antwort). Das wirkt wie ein klarer, rhythmischer Ritt."},
+ {t:"Nur wer mit Toten vom Mohn\naß, von dem ihren,",a:"Enjambement",w:"Rilke – Nur wer die Leier schon hob",k:O,x:"„vom Mohn / aß“: Das Verb steht erst im nächsten Vers. Man liest ohne Pause weiter."},
+ {t:"Am grauen Strand, am grauen Meer\nUnd seitab liegt die Stadt;",a:"Zeilenstil",w:"Storm – Die Stadt",k:O,x:"Jeder Vers bildet eine eigene Sinneinheit und endet mit einer Pause."},
+ {t:"Gastfreundlich tönt dem Wanderer im\nFriedlichen Dorfe die Abendglocke.",a:"Enjambement",w:"Hölderlin – Abendphantasie",k:O,x:"Der Vers bricht mitten in der Wortgruppe „im friedlichen Dorfe“ ab."},
+ {t:"Er schaute mit vergnügten Sinnen\nAuf das beherrschte Samos hin.",a:"Enjambement",w:"Schiller – Der Ring des Polykrates",k:O,x:"„schaute … auf das beherrschte Samos hin“: Der Satz läuft über das Versende hinweg."},
+ {t:"Röslein, Röslein, Röslein rot,\nRöslein auf der Heiden.",a:"Zeilenstil",w:"Goethe – Heidenröslein",k:O,x:"Jeder Vers ist für sich abgeschlossen – das wirkt liedhaft und einprägsam wie ein Refrain."}
+];
+const E2=[
+ {t:"Gastfreundlich tönt dem Wanderer im\nFriedlichen Dorfe die Abendglocke.",a:"starkes Enjambement",w:"Hölderlin – Abendphantasie",k:O,x:"Die Präposition „im“ wird von „friedlichen Dorfe“ getrennt. Der erste Vers ergibt allein keinen Sinn."},
+ {t:"Vor seiner Hütte ruhig im Schatten sitzt\nDer Pflüger; dem Genügsamen raucht sein Herd.",a:"starkes Enjambement",w:"Hölderlin – Abendphantasie",k:O,x:"„sitzt / Der Pflüger“: Prädikat und Subjekt werden getrennt, man wartet gespannt auf das Wer."},
+ {t:"Nur wer mit Toten vom Mohn\naß, von dem ihren,",a:"starkes Enjambement",w:"Rilke – Nur wer die Leier schon hob",k:O,x:"Das Verb „aß“ wird abgetrennt und steht betont am Anfang des neuen Verses."},
+ {t:"Lust und Leid und Liebesklagen\nKommen so verworren her",a:"schwaches Enjambement",w:"Eichendorff – Die Nachtblume",k:O,x:"Jeder Vers bleibt für sich sinnvoll. Der Satz fließt weiter, ohne dass eine Wortgruppe zerrissen wird."},
+ {t:"In einem Tal bei armen Hirten\nErschien mit jedem jungen Jahr,",a:"schwaches Enjambement",w:"Schiller – Das Mädchen aus der Fremde",k:O,x:"Die Ortsangabe und das Prädikat stehen in getrennten Versen, aber jede Einheit bleibt vollständig."}
+];
+
+/* ---------- Sequenz 2: Bild, Klang, Bedeutung ---------- */
+const ITEMS2=[
+ {t:"„Die Minuten vergingen wie zäher, schwarzer Honig.“",a:"Vergleich",w:"Michael Ende – Momo",k:B,x:"Bildhafter Vergleich für das quälend langsame Verstreichen der Zeit unter dem Einfluss der Grauen Herren."},
+ {t:"„Er saß da, stumm wie ein Bildwerk, und starrte ins Leere.“",a:"Vergleich",w:"Theodor Storm – Der Schimmelreiter",k:B,x:"Der Vergleich mit einer Statue zeigt, wie erstarrt die Figur ist."},
+ {t:"„… und ich sehe nichts als ein ewig verschlingendes, ewig wiederkäuendes Ungeheuer.“",a:"Metapher",w:"Goethe – Die Leiden des jungen Werther (Brief vom 18. August)",k:O,x:"Die Natur, die Werther anfangs mit „wunderbarer Heiterkeit“ erfüllt hat, wird zum Ungeheuer – Bild für seine zerstörerische Gefühlswelt.",not:["Personifikation","Hyperbel"]},
+ {t:"„Er befand sich in einem Käfig aus Verpflichtungen.“",a:"Metapher",w:"Franz Kafka – Die Verwandlung",k:B,x:"Die Pflichten werden zum Käfig: Gregor ist schon vor der Verwandlung in seinem Leben gefangen.",not:["Allegorie","Symbol"]},
+ {t:"„Draußen schrie der Sturm und rüttelte mit wütenden Händen an den Fensterläden.“",a:"Personifikation",w:"Theodor Storm – Der Schimmelreiter",k:B,x:"Die Naturgewalten des Meeres erscheinen als feindselige, lebendige Angreifer.",not:["Metapher","Onomatopoesie"]},
+ {t:"„Die Nacht schlich durch die Straßen des Dorfes.“",a:"Personifikation",w:"Franz Kafka – Das Schloss",k:B,x:"Die Nacht bewegt sich wie ein heimlicher Mensch – das Dorf wirkt unheimlich.",not:["Metapher"]},
+ {t:"„Vielfach wirken die Pfeile des Amor: einige ritzen, und vom schleichenden Gift kranket auf Jahre das Herz.“",a:"Allegorie",w:"Goethe – Römische Elegien (III)",k:O,x:"Die Pfeile des Liebesgottes Amor stehen für die unterschiedlichen, oft unvorhersehbaren Wirkungen der Liebe.",not:["Personifikation","Metapher","Symbol"]},
+ {t:"Mangel, Schuld, Sorge und Not treten als vier graue Weiber auf.",a:"Allegorie",w:"Goethe – Faust II, 5. Akt „Mitternacht“",k:M,x:"Die Nöte des Lebens werden zu Figuren. Die Sorge wird zur Gestalt der existenziellen Bedrohung.",not:["Personifikation","Symbol","Metapher"]},
+ {t:"Das allgegenwärtige Gesicht des „Großen Bruders“ auf Plakaten.",a:"Allegorie",w:"George Orwell – 1984",k:M,x:"Der „Große Bruder“ ist kein echter Mensch, sondern die Verkörperung des totalitären, alles überwachenden Staates.",not:["Symbol","Personifikation","Metapher"],n:"Original in englischer Sprache, in der Schule meist in Übersetzung gelesen."},
+ {t:"Die immer wiederkehrende „blaue Blume“.",a:"Symbol",w:"Novalis – Heinrich von Ofterdingen",k:M,x:"Zentrales Symbol der Romantik für Sehnsucht, Unendlichkeit und die Verbindung von Natur und Geist.",not:["Allegorie","Metapher"]},
+ {t:"Der Schimmel als Vorbote des Unheils und der Naturgewalten.",a:"Symbol",w:"Theodor Storm – Der Schimmelreiter",k:M,x:"Das Pferd steht für das Unheimliche und die Bedrohung durch das Meer.",not:["Allegorie","Metapher","Personifikation"]},
+ {t:"„Er hatte das Gefühl, als ob sein Kopf in tausend Stücke zerspringen müsste.“",a:"Hyperbel",w:"Franz Kafka – Die Verwandlung",k:B,x:"Die Übertreibung macht Gregors unerträgliche Belastung nach der Verwandlung spürbar.",not:["Vergleich"]},
+ {t:"„Sie schien ein Meer von Tränen vergossen zu haben.“",a:"Hyperbel",w:"Thomas Mann – Buddenbrooks",k:B,x:"Die Übertreibung macht die Größe des Kummers sichtbar.",not:["Metapher"]},
+ {t:"„Es war keine Kleinigkeit, die er sich da vorgenommen hatte.“",a:"Litotes",w:"Thomas Mann – Buddenbrooks",k:B,x:"Das Gegenteil („Kleinigkeit“) wird verneint. Gemeint ist ein riesiges Vorhaben. Die Untertreibung wirkt vornehm zurückhaltend und gerade dadurch eindringlich.",not:["Euphemismus","Ironie"]},
+ {t:"„Das war keine leichte Aufgabe für ihn.“",a:"Litotes",w:"Theodor Storm – Der Schimmelreiter",k:B,x:"Gemeint ist: eine sehr schwere Aufgabe. Die Zurückhaltung macht die Last umso spürbarer.",not:["Euphemismus","Ironie"]},
+ {t:"„Er hat sich zur Ruhe gesetzt.“",a:"Euphemismus",w:"Thomas Mann – Buddenbrooks",k:B,x:"Verpackt den wirtschaftlichen Rückzug oder das Scheitern in der Kaufmannsfamilie würdevoll.",not:["Litotes","Metapher"]},
+ {t:"„Mein Goldfisch ist von uns gegangen …“",a:"Euphemismus",w:"Alltagssprache",k:AL,x:"„Gestorben“ klingt hart, „von uns gegangen“ klingt sanfter und mildert die Trauer.",not:["Litotes","Metapher"]},
+ {t:"„Was für ein glücklicher Zufall, dass ausgerechnet heute der Deich bricht“, dachte er bitter.",a:"Ironie",w:"Theodor Storm – Der Schimmelreiter",k:B,x:"Es ist kein Glück, sondern eine Katastrophe – das Gesagte wird bitter ins Gegenteil verkehrt."},
+ {t:"„Ein herrlicher Tag“, dachte er, während der Regen unaufhörlich gegen die Scheiben peitschte.",a:"Ironie",w:"Heinrich Böll – Die verlorene Ehre der Katharina Blum",k:B,x:"Der peitschende Regen widerspricht dem „herrlichen Tag“ – die Bemerkung ist bitter gemeint.",not:["Personifikation"]},
+ {t:"„schwarze Milch der Frühe“",a:"Oxymoron",w:"Paul Celan – Todesfuge (1948)",k:O,x:"Das lebensspendende Weiß wird schwarz: Im Vernichtungslager wird aus Nahrung Tod.",not:["Antithese","Metapher"]},
+ {t:"„Sie fühlte eine süße Bitterkeit bei dem Gedanken an Abschied.“",a:"Oxymoron",w:"Arthur Schnitzler – Traumnovelle",k:B,x:"Zwei gegensätzliche Geschmacksempfindungen drücken die widersprüchliche Gefühlswelt der Figur aus.",not:["Antithese"]},
+ {t:"„Sachliche Romanze“",a:"Oxymoron",w:"Erich Kästner – Gedichttitel (1928)",k:O,x:"Gefühl (Romanze) trifft auf Nüchternheit (sachlich). Der Titel kündigt eine Liebe an, die erkaltet ist.",not:["Antithese"]},
+ {t:"„Was dieser heute baut, reißt jener morgen ein.“",a:"Antithese",w:"Andreas Gryphius – Es ist alles eitel (1637)",k:O,x:"Bauen und Einreißen, heute und morgen: das Barock-Motiv der Vergänglichkeit (Vanitas).",not:["Oxymoron"]},
+ {t:"„Himmelhoch jauchzend,\nzum Tode betrübt“",a:"Antithese",w:"Goethe – Egmont (Klärchens Lied)",k:O,x:"Die Gegensätze zeigen die extremen Gefühlsschwankungen der Liebe.",not:["Oxymoron","Hyperbel"]},
+ {t:"„Ernst ist das Leben, heiter ist die Kunst.“",a:"Antithese",w:"Friedrich Schiller – Prolog zu Wallensteins Lager",k:O,x:"Leben und Kunst werden gegenübergestellt: Die Kunst entlastet vom Ernst des Lebens.",not:["Oxymoron"]},
+ {t:"„Blütenschimmer“",a:"Neologismus",w:"Joseph von Eichendorff – Mondnacht (1837)",k:O,x:"Kreatives Wortspiel der Romantik: Blüte und Schimmer verschmelzen zu einem Lichtbild.",not:["Metapher","Symbol"]},
+ {t:"„Wellenbrecher“ (für Maßnahmen gegen eine Infektionswelle in der Pandemie)",a:"Neologismus",w:"Alltagssprache",k:AL,x:"Ein vorhandenes Wort für Hafenbauten bekommt eine neue Bedeutung.",not:["Metapher","Euphemismus"]},
+ {t:"„Er wollte nur weg, weit weg, durch wilde Wälder und über weglose Wüsten …“",a:"Alliteration",w:"E.T.A. Hoffmann – Der Sandmann",k:B,x:"Der Gleichklang des „W“ unterstreicht Nathanaels Drang, vor dem Unheimlichen zu fliehen."},
+ {t:"„Milch macht müde Männer munter.“",a:"Alliteration",w:"Werbespruch (Beispiel aus dem Aufsatz-Rad)",k:"Werbung",x:"Der gleiche Anfangslaut macht den Spruch einprägsam."},
+ {t:"„Und es wallet und siedet und brauset und zischt,\nWie wenn Wasser mit Feuer sich mengt“",a:"Onomatopoesie",w:"Friedrich Schiller – Der Taucher (1797)",k:O,x:"Die Verben ahmen das Tosen des Meeresstrudels nach – man hört das Wasser beim Lesen.",not:["Vergleich","Alliteration","Personifikation"]},
+ {t:"„War er ein Tier, da ihn Musik so ergriff?“",a:"Rhetorische Frage",w:"Franz Kafka – Die Verwandlung",k:O,x:"Gregor fragt das sich selbst, als er das Geigenspiel seiner Schwester hört. Die Frage zeigt seinen inneren Konflikt zwischen Tier und Mensch.",n:"Man kann den Satz auch als echte Selbstfrage lesen – gute Diskussionsfrage."},
+ {t:"„Wer hätte das ahnen können?“",a:"Rhetorische Frage",w:"Friedrich Dürrenmatt – Der Richter und sein Henker",k:B,x:"Die Antwort ist klar: niemand. Die Frage betont die Überraschung."}
+];
+
+/* ---------- Sequenz 3: Wortwiederholung & Satzbau ---------- */
+const ITEMS3=[
+ {t:"„Wer nie sein Brot mit Tränen aß,\nWer nie die kummervollen Nächte\nAuf seinem Bette weinend saß,“",a:"Anapher",w:"Goethe – Wilhelm Meisters Lehrjahre (Lied des Harfners)",k:O,x:"Das wiederholte „Wer nie“ erzeugt einen schweren, klagenden Rhythmus und verstärkt das Leid.",not:["Parallelismus","Symploke"]},
+ {t:"„Es schlug mein Herz, geschwind zu Pferde!\nEs war getan fast eh gedacht.“",a:"Anapher",w:"Goethe – Willkommen und Abschied",k:O,x:"Die gleich beginnenden Verse treiben das Gedicht voran – man spürt Eile und Aufregung.",not:["Ellipse","Parallelismus"]},
+ {t:"„Ich habe es nicht gewollt. Ich habe nur meine Pflicht getan. Ich bin unschuldig.“",a:"Anapher",w:"Bernhard Schlink – Der Vorleser",k:B,x:"Das dreifache „Ich“ betont Hannas verzweifelten Versuch, die Schuld von sich zu weisen.",not:["Parallelismus","Klimax","Akkumulation"]},
+ {t:"„Vielleicht hältst du mich für feige? Ja, ich bin feige.“",a:"Epipher",w:"Arthur Schnitzler – Leutnant Gustl",k:B,x:"Das Wort „feige“ bleibt am Ende hängen – Gustl kommt von dem Vorwurf nicht los."},
+ {t:"„Nicht jetzt, niemals jetzt.“",a:"Epipher",w:"Übungsbeispiel",k:U,x:"„jetzt“ steht am Ende beider Satzteile und wird dadurch betont.",not:["Ellipse","Klimax"]},
+ {t:"„Heißest du Kunz?“ – „Nein.“ – „Heißest du Heinz?“ – „Nein.“",a:"Symploke",w:"Gebrüder Grimm – Rumpelstilzchen",k:O,x:"Die Frage beginnt immer gleich, die Antwort ist immer gleich – bis zum Bruch mit „Rumpelstilzchen“.",not:["Anapher","Epipher","Parallelismus"]},
+ {t:"„Er sah nur noch die Dunkelheit, er fühlte nur noch die Dunkelheit.“",a:"Symploke",w:"Wolfgang Borchert – Kurzgeschichten (Nachkriegsliteratur)",k:B,x:"Anfang („er … nur noch“) und Ende („die Dunkelheit“) wiederholen sich. Das verstärkt die ausweglose Atmosphäre der Trümmerzeit.",n:"In der ersten Übung war das Beispiel unter Epipher. Weil sich auch der Anfang wiederholt, ist es genau genommen eine Symploke.",not:["Anapher","Epipher","Parallelismus"]},
+ {t:"„Mit dem Schiffe spielen Wind und Wellen,\nWind und Wellen nicht mit seinem Herzen.“",a:"Anadiplose",w:"Goethe – Seefahrt (1776)",k:O,x:"„Wind und Wellen“ schließt den ersten Vers und eröffnet den zweiten. Die Wiederholung verkettet die Verse.",not:["Chiasmus"]},
+ {t:"„Er wartete auf das Licht. Licht kam keines.“",a:"Anadiplose",w:"Übungsbeispiel",k:U,x:"Das letzte Wort des ersten Satzes eröffnet den zweiten – die Enttäuschung folgt unmittelbar."},
+ {t:"„Entbehren sollst du! Sollst entbehren!“",a:"Kyklos",w:"Goethe – Faust I (1808)",k:O,x:"„Entbehren“ rahmt den Ausruf ein. Der Satz schließt sich wie ein Ring – es gibt keinen Ausweg.",not:["Chiasmus","Gemination","Anadiplose"]},
+ {t:"„Allein war er gekommen, und er ging allein.“",a:"Kyklos",w:"Übungsbeispiel",k:U,x:"„Allein“ steht am Anfang und am Ende – die Einsamkeit umschließt den ganzen Satz.",not:["Chiasmus"]},
+ {t:"„Mein Vater, mein Vater, jetzt fasst er mich an!“",a:"Gemination",w:"Goethe – Erlkönig",k:O,x:"Die Verdopplung drückt die panische Angst des Kindes aus und steigert die Dramatik.",not:["Anapher"]},
+ {t:"„Röslein, Röslein, Röslein rot,\nRöslein auf der Heiden.“",a:"Gemination",w:"Goethe – Heidenröslein",k:O,x:"Die Verdopplung stellt das Röslein in den Mittelpunkt und gibt dem Gedicht einen volksliedhaften Klang.",not:["Anapher"]},
+ {t:"„Lauf, lauf, so schnell dich deine Füße tragen!“",a:"Gemination",w:"Gottfried Keller – Kleider machen Leute",k:B,x:"Die unmittelbare Verdopplung treibt Tempo und Panik voran."},
+ {t:"„Heute back ich, morgen brau ich, übermorgen hol ich der Königin ihr Kind.“",a:"Klimax",w:"Gebrüder Grimm – Rumpelstilzchen",k:O,x:"Die drei Zeitstufen laufen auf die entscheidende Tat zu: Rumpelstilzchen ist sich seines Sieges sicher.",not:["Parallelismus","Akkumulation"]},
+ {t:"„Ein Tag, ein Monat, ein Jahr verging, ohne dass eine Nachricht kam.“",a:"Klimax",w:"Arthur Schnitzler – Traumnovelle",k:B,x:"Tag – Monat – Jahr: Mit jedem Glied wächst die Verzweiflung des vergeblichen Wartens.",not:["Akkumulation","Anapher"]},
+ {t:"„Ich kam, sah und siegte.“",a:"Klimax",w:"Julius Caesar (lat. „veni, vidi, vici“, übersetzt)",k:O,x:"Drei Schritte, die sich bis zum Sieg steigern.",not:["Akkumulation","Parallelismus","Ellipse"]},
+ {t:"„Alles rennet, rettet, flüchtet …“",a:"Akkumulation",w:"Friedrich Schiller – Das Lied von der Glocke",k:O,x:"Drei Verben ergeben zusammen das Bild der Panik beim Brand. Der Oberbegriff „alles“ steht am Anfang.",not:["Klimax"]},
+ {t:"„Was sind wir Menschen doch? Ein Wohnhaus grimmer Schmerzen,\nEin Ball des falschen Glücks, ein Irrlicht dieser Zeit …“",a:"Akkumulation",w:"Andreas Gryphius – Menschliches Elende",k:O,x:"Bild reiht sich an Bild, alle beschreiben den Menschen. Die Anhäufung macht seine Hinfälligkeit überwältigend deutlich.",not:["Klimax","Anapher","Parallelismus"]},
+ {t:"„Ich habe nichts zu bieten außer Blut, Mühsal, Tränen und Schweiß.“",a:"Akkumulation",w:"Winston Churchill, Rede vor dem Unterhaus 1940 (übersetzt)",k:O,x:"Vier gleichwertige Begriffe ergeben das Bild der Opfer, die der Krieg verlangt.",not:["Klimax"]},
+ {t:"„Reden ist Silber, Schweigen ist Gold.“",a:"Parallelismus",w:"Sprichwort (Beispiel aus dem Aufsatz-Rad)",k:R,x:"Beide Satzteile sind gleich gebaut. Der gleiche Bau macht den Unterschied zwischen Reden und Schweigen deutlich.",not:["Chiasmus","Epipher"]},
+ {t:"„Er kam spät, er ging früh.“",a:"Parallelismus",w:"Übungsbeispiel",k:U,x:"Gleicher Satzbau, nur die Wörter wechseln.",not:["Anapher","Chiasmus"]},
+ {t:"„Ach Gott! die Kunst ist lang;\nUnd kurz ist unser Leben.“",a:"Chiasmus",w:"Goethe – Faust I (Wagner)",k:O,x:"Kunst – lang / kurz – Leben: Die Reihenfolge kreuzt sich. Der Gegensatz zwischen Kunst und Leben wird betont.",not:["Parallelismus"]},
+ {t:"„Eng ist die Welt, und das Gehirn ist weit.“",a:"Chiasmus",w:"Friedrich Schiller – Wallensteins Tod",k:O,x:"eng – Welt / Gehirn – weit: Adjektiv und Nomen tauschen die Plätze.",not:["Parallelismus"]},
+ {t:"„Fragt nicht, was euer Land für euch tun kann – fragt, was ihr für euer Land tun könnt.“",a:"Chiasmus",w:"John F. Kennedy, Antrittsrede 1961 (übersetzt)",k:O,x:"Die Umkehrung „Land – ihr / ihr – Land“ dreht die Perspektive: Eigenverantwortung statt Forderungen an den Staat.",not:["Parallelismus","Anapher"]},
+ {t:"„Ausgewiesen. Keine Papiere. Nichts.“",a:"Ellipse",w:"Erich Maria Remarque – Arc de Triomphe",k:B,x:"Die abgehackten Sätze spiegeln die existenzielle Not und die bürokratische Kälte, der die Flüchtlinge ausgesetzt sind.",not:["Klimax","Akkumulation"]},
+ {t:"„Endlich Ruhe.“",a:"Ellipse",w:"Wolfgang Borchert – Das Brot",k:B,x:"Das Verb fehlt. Der kurze Satz wirkt erschöpft und erleichtert zugleich."},
+ {t:"„An den Ufern der Havel lebte, um die Mitte des sechzehnten Jahrhunderts, ein Roßhändler, namens Michael Kohlhaas …“",a:"Parenthese",w:"Heinrich von Kleist – Michael Kohlhaas",k:O,x:"Die Zeitangabe ist zwischen Kommas eingeschoben. Ohne sie bleibt der Satz vollständig. Der Erzähler wirkt wie ein sachlicher Chronist."},
+ {t:"„Diese Brücke – das wissen Sie alle – ist seit Jahren marode.“",a:"Parenthese",w:"erfundene Redepassage",k:U,x:"Der Einschub spricht das Publikum direkt an und unterstellt, dass alle schon zustimmen."}
+];
+
+/* ---------- Sequenz 4: großer Mix (1 pro Stilmittel) ---------- */
+const ITEMS4=[
+ {t:"„Er fühlt sich wohl wie ein Fisch im Wasser.“",a:"Vergleich",k:R,x:"Das Vergleichswort „wie“ verbindet zwei Bereiche."},
+ {t:"„Wüstenschiff“ für ein Kamel",a:"Metapher",k:AL,x:"Das Kamel wird ohne „wie“ mit einem Schiff gleichgesetzt: Es trägt Lasten durch das „Meer“ aus Sand.",not:["Neologismus","Symbol"]},
+ {t:"„Der Wind flüsterte mir Geheimnisse ins Ohr.“",a:"Personifikation",k:U,x:"Der Wind bekommt eine menschliche Fähigkeit: flüstern.",not:["Metapher","Onomatopoesie"]},
+ {t:"„Der Sensenmann mit Skelett und Sense holt die Menschen ins Totenreich.“",a:"Allegorie",k:U,x:"Der abstrakte Tod wird zu einer Figur, und jedes Merkmal (Skelett, Sense) trägt Bedeutung.",not:["Personifikation","Symbol","Metapher"]},
+ {t:"Eine rote Rose wird zum Valentinstag verschenkt.",a:"Symbol",k:AL,x:"Ein konkreter Gegenstand steht durch Übereinkunft für Liebe.",not:["Allegorie","Metapher"]},
+ {t:"„Mein Rucksack wiegt heute eine Tonne.“",a:"Hyperbel",k:U,x:"Starke Übertreibung: Der Rucksack ist schwer, aber sicher keine Tonne.",not:["Metapher"]},
+ {t:"„Er hat damit nicht unrecht.“",a:"Litotes",k:U,x:"Das Gegenteil wird verneint. Gemeint ist: Er hat recht.",not:["Euphemismus","Ironie"]},
+ {t:"„Als die Polizei kam, suchte er das Weite.“",a:"Euphemismus",k:R,x:"„Das Weite suchen“ statt „fliehen“: Die Flucht klingt wie ein harmloser Spaziergang.",not:["Metapher","Litotes"]},
+ {t:"Jemand lässt den Kaffee fallen. Du sagst: „Na, das hast du ja prima hingekriegt!“",a:"Ironie",k:U,x:"Gemeint ist das Gegenteil: Das ist schiefgegangen.",not:["Hyperbel"]},
+ {t:"„Das ist doch ein offenes Geheimnis.“",a:"Oxymoron",k:R,x:"Ein Geheimnis, das alle kennen: zwei Gegensätze in einer Wortgruppe.",not:["Antithese"]},
+ {t:"„Der Geist ist willig, aber das Fleisch ist schwach.“",a:"Antithese",w:"Bibel (Matthäus 26,41, Luther)",k:O,x:"Geist und Fleisch, willig und schwach werden einander gegenübergestellt.",not:["Oxymoron","Parallelismus","Chiasmus"]},
+ {t:"„Der Enkeltrick ist eine gemeine Betrugsmasche.“",a:"Neologismus",k:AL,x:"„Enkeltrick“: Zwei vorhandene Wörter ergeben ein neues für einen neuen Betrug.",not:["Euphemismus","Metapher"]},
+ {t:"„Das Schiff ging mit Mann und Maus unter.“",a:"Alliteration",k:R,x:"„Mann und Maus“ beginnen mit demselben Laut. Die Redewendung prägt sich dadurch ein.",not:["Onomatopoesie","Hyperbel"]},
+ {t:"„Der Bach plätschert, die Bienen summen.“",a:"Onomatopoesie",k:U,x:"„plätschern“ und „summen“ ahmen die Geräusche nach.",not:["Parallelismus","Personifikation","Alliteration"]},
+ {t:"„Bin ich etwa dein Diener?“",a:"Rhetorische Frage",k:U,x:"Die Antwort ist klar: nein. Die Frage drückt Ärger aus.",not:["Ironie"]},
+ {t:"„Jetzt ist die Zeit, jetzt ist der Moment, jetzt müssen wir handeln.“",a:"Anapher",k:U,x:"„Jetzt“ steht am Anfang jedes Satzteils und erzeugt Dringlichkeit.",not:["Parallelismus","Klimax","Akkumulation"]},
+ {t:"„Ich bin für Frieden, du bist für Frieden, alle sind für Frieden.“",a:"Epipher",k:U,x:"„für Frieden“ steht am Ende jedes Satzteils.",not:["Parallelismus","Klimax","Symploke"]},
+ {t:"„Wer zahlt für die Krise? Wir alle. Wer trägt die Folgen? Wir alle.“",a:"Symploke",k:U,x:"Anfang („Wer“) und Ende („Wir alle“) wiederholen sich.",not:["Anapher","Epipher","Rhetorische Frage","Parallelismus"]},
+ {t:"„Wir schaffen Wohnraum. Wohnraum schafft Zukunft.“",a:"Anadiplose",k:U,x:"Das letzte Wort des ersten Satzes eröffnet den zweiten – es entsteht eine Kette.",not:["Chiasmus"]},
+ {t:"„Mut braucht dieses Land – Mut!“",a:"Kyklos",k:U,x:"„Mut“ rahmt den Satz am Anfang und am Ende ein.",not:["Gemination","Ellipse"]},
+ {t:"„Niemals, niemals verlasse ich dich!“",a:"Gemination",k:U,x:"„niemals“ wird sofort wiederholt – das wirkt eindringlich.",not:["Anapher"]},
+ {t:"„meine Hütte, mein Haus, mein Palast“",a:"Klimax",k:U,x:"Dreifache Steigerung von klein zu groß.",not:["Anapher","Akkumulation","Ellipse"]},
+ {t:"„Hefte, Bücher, Stifte, Pausenbrot – alles lag auf dem Boden.“",a:"Akkumulation",k:U,x:"Gleichwertige Dinge werden aufgezählt und im Oberbegriff „alles“ gebündelt.",not:["Klimax","Ellipse"]},
+ {t:"„Die Sonne scheint, die Vögel singen.“",a:"Parallelismus",k:U,x:"Beide Satzteile sind gleich gebaut: Subjekt – Prädikat.",not:["Personifikation","Akkumulation","Onomatopoesie"]},
+ {t:"„Ich schlafe am Tag, in der Nacht wache ich.“",a:"Chiasmus",k:U,x:"Subjekt und Zeitangabe wechseln über Kreuz die Position.",not:["Parallelismus","Antithese"]},
+ {t:"„Je eher, desto besser!“",a:"Ellipse",k:R,x:"Das Verb fehlt, man denkt es sich dazu."},
+ {t:"„Die Prüfung war, ehrlich gesagt, leichter als gedacht.“",a:"Parenthese",k:U,x:"„ehrlich gesagt“ ist ein Kommentar, der den Satz kurz unterbricht."}
+];
+
+/* ---------- Übersichten ---------- */
+function ov(id,groups){
+  $(id).innerHTML=groups.map(([title,list])=>(title?`<div class="grp">${title}</div>`:'')+list.map(s=>`<b>${s}</b><span>${DEF[s]}</span>`).join('')).join('');
+}
+ov('#ov2',[["",G1]]);ov('#ov3',[["",G2]]);
+ov('#ov4',[["Bild, Klang, Bedeutung (Sequenz 2)",G1],["Wortwiederholung und Satzbau (Sequenz 3)",G2]]);
+
+/* ---------- Start ---------- */
+function build2(){buildQuiz('2',ITEMS2,G1,5)}
+function build3(){buildQuiz('3',ITEMS3,G2,5)}
+function build4(){buildQuiz('4',ITEMS4,ALL,5)}
+buildK1();buildK2();buildK3();
+buildQuiz('E1',E1,["Zeilenstil","Enjambement"],0,'Verse');
+buildQuiz('E2',E2,["starkes Enjambement","schwaches Enjambement"],0,'Verse');
+build2();build3();build4();
+</script>
+</body>
+</html>
